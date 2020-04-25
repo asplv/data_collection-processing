@@ -18,3 +18,6 @@ This repository contains practice of data collection and processing tools using 
 - Lenta.ru https://lenta.ru/
 
 5. Implementing jobparser by scrapy basing on hh.ru https://hh.ru/ and superjob https://russia.superjob.ru/
+
+6. Parsing online store https://leroymerlin.ru/
+- Collecting url, title, price, features and all-size photos
