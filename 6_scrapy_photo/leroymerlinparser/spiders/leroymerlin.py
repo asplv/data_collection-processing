@@ -14,11 +14,12 @@ class LeroymerlinSpider(scrapy.Spider):
 
     def parse(self, response: HtmlResponse):
         next_page = response.xpath("//a[@class='paginator-button next-paginator-button']/@href").extract_first()
-        yield response.follow(next_page, callback=self.parse)
 
         item_links = response.xpath("//div[@class='ui-product-card']/@data-product-url").extract()
         for link in item_links:
             yield response.follow(link, callback=self.parse_items)
+
+        yield response.follow(next_page, callback=self.parse)
 
     def parse_items(self, response: HtmlResponse):
         loader = ItemLoader(item=LeroymerlinparserItem(), response=response)
