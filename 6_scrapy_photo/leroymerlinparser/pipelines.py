@@ -7,10 +7,11 @@
 import scrapy
 from scrapy.pipelines.images import ImagesPipeline
 from pymongo import MongoClient
-import re
 import os
 
+
 class LeroymerlinparserPipeline(object):
+
     def __init__(self):
         client = MongoClient('localhost', 27017)
         self.mongo_base = client.leroymerlin
@@ -19,11 +20,6 @@ class LeroymerlinparserPipeline(object):
         # характеристики
         if item['features']:
             item['features'] = item['features'][0]
-        # артикул
-        article = re.compile('\d+')
-        item['article'] = article.findall(item['article'])[0]
-        # цена
-        item['price'] = int(item['price'].replace(' ', ''))
 
         # пополнение базы
         collection = self.mongo_base[spider.name]
@@ -36,6 +32,7 @@ class LeroymerlinparserPipeline(object):
 
 
 class LeroymerlinPhotosPipeline(ImagesPipeline):
+
     def extract_filename(self, url):
         # извлекаем название файла из ссылки
         prefix = url[url.find('upload/') + 7:]
@@ -49,7 +46,7 @@ class LeroymerlinPhotosPipeline(ImagesPipeline):
             for img in item['photos']:
                 filename = self.extract_filename(img)
                 try:
-                    yield scrapy.Request(img, flags=[item['title'], filename])
+                    yield scrapy.Request(img, flags=[item['article'], filename])
                 except Exception as e:
                     print(e)
 
