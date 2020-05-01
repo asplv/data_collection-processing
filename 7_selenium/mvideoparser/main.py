@@ -35,6 +35,7 @@ pages = WebDriverWait(driver, 10).until(
     EC.presence_of_all_elements_located((By.XPATH, "(//div[@data-init='gtm-push-products'])[2]//div[@class='carousel-paging']/a"))
 )
 
+items = []
 for i in range(len(pages)):
     if i != 0:
         next_button = driver.find_element_by_xpath("(//div[@data-init='gtm-push-products'])[2]//a[@class='next-btn sel-hits-button-next']")
@@ -49,18 +50,17 @@ for i in range(len(pages)):
             (By.XPATH, "(//div[@data-init='gtm-push-products'])[2]//li[@class='gallery-list-item']"))
     )
 
+for item in items:
+    item_data = {}
+    elem = item.find_element_by_xpath(".//div[@class='c-product-tile-picture__holder']/a")
+    item_data['url'] = elem.get_attribute('href')
+    item_data['info'] = json.loads(elem.get_attribute('data-product-info'))
 
-    for item in items:
-        item_data = {}
-        elem = item.find_element_by_xpath(".//div[@class='c-product-tile-picture__holder']/a")
-        item_data['url'] = elem.get_attribute('href')
-        item_data['info'] = json.loads(elem.get_attribute('data-product-info'))
-
-        obj = next(sale_hits.find({'info.productId': {'$eq': item_data['info']['productId']}}), None)
-        if not obj:
-            sale_hits.insert_one(item_data)
-        else:
-            sale_hits.update_one({'info.productId': {'$eq': item_data['info']['productId']}}, {'$set': item_data})
+    obj = next(sale_hits.find({'info.productId': {'$eq': item_data['info']['productId']}}), None)
+    if not obj:
+        sale_hits.insert_one(item_data)
+    else:
+        sale_hits.update_one({'info.productId': {'$eq': item_data['info']['productId']}}, {'$set': item_data})
 
 
 driver.quit()
