@@ -21,3 +21,7 @@ This repository contains practice of data collection and processing tools using 
 
 6. Parsing online store https://leroymerlin.ru/
 - Collecting url, title, price, features and all-size photos
+
+7. Using Selenium to parse mail.ru inbox details and sales hits from mvideo online store https://www.mvideo.ru
+
+8. Simple visualization of Sberbank Open Data
